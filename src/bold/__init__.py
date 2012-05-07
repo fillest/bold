@@ -194,6 +194,8 @@ class ProgramBuilder (object):
 
 					clean.append(obj_fpath)
 
+					deps.add(obj_fpath, obj_fpath, self)
+
 					dep_fpath = build_dir + '/' + src_name + '.d'
 					clean.append(dep_fpath)
 					if not dry:
@@ -250,7 +252,7 @@ def build (db, log, dry, build_dir, builders, do_list_deps):
 
 				for source, builder in state['sources']:
 					modified_builders[builder].add(source)
-					if source in deps._deps:
+					if source in deps._deps and source != target:
 						proc_dep(source, True)
 		for target in deps._deps:
 			proc_dep(target)
