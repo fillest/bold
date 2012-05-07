@@ -218,6 +218,7 @@ class ProgramBuilder (object):
 			for p in obj_fpaths:
 				deps.add(p, exe_fpath, self)
 
+
 def build (db, log, dry, build_dir, builders, do_list_deps):
 	deps = db.get('deps', Deps())  #TODO if class changed, we get AttributeError: 'module' object has no attribute 'ProgramBuilder'
 	if do_list_deps:
@@ -225,7 +226,7 @@ def build (db, log, dry, build_dir, builders, do_list_deps):
 		sys.exit(0)
 
 
-	log.info("build")
+	log.info("build all")
 
 	clean_fpaths = []
 	try:
@@ -247,7 +248,7 @@ def build (db, log, dry, build_dir, builders, do_list_deps):
 				modified = True
 
 			if modified:
-#				print "***", target, state['sources']
+				#print "***", target, state['sources']
 				deps.mark_modified(target)
 
 				for source, builder in state['sources']:
@@ -266,7 +267,7 @@ def build (db, log, dry, build_dir, builders, do_list_deps):
 			modified_builders[builder] = modified_builders.default_factory()
 
 
-		#~ print "-->", modified_builders
+		#print "-->", modified_builders
 		def cmp ((b1, _s1), (b2, _s2)):
 			r1 = getattr(b1, 'require', [])
 			if not isinstance(r1, list):
