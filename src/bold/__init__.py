@@ -307,3 +307,30 @@ def recursive_list_files (top_dirname, exclude=None):
 			fpath = os.path.join(dirname, name)
 			if not any(fnmatch.fnmatch(fpath, ex) for ex in exclude):
 				yield fpath
+
+class LuajitBuilder (object):
+	install_dir = None
+	src_dir = 'src/luajit'
+
+	def build (self, _build_dir, clean, dry, log, deps, _targets):
+		log.info("build luajit")
+
+		with change_cwd(self.src_dir):
+			cmd = "make amalg CCDEBUG=' -g' BUILDMODE=' dynamic' PREFIX={prefix} && make install PREFIX={prefix}".format(prefix = self.install_dir)
+			log.info("running: " + cmd)
+			fail = subprocess.call(cmd, shell=True)
+
+			subprocess.call(['make', 'clean'])
+
+			if fail:
+				sys.exit(1)
+
+			out_fpath = self.install_dir + '/lib/libluajit-5.1.so'
+			assert os.path.isfile(out_fpath)
+
+			#clean.append(out_fpath)
+
+		for fpath in recursive_list_files(self.src_dir, [self.src_dir + '/doc/*']):
+			deps.add(fpath, out_fpath, self)
+		deps.add(out_fpath, None, self)
+		#its .so so we don't rebuild exe on change
