@@ -13,7 +13,7 @@ except ImportError:
 
 setuptools.setup(
 	name = 'bold',
-	version = '0.2.0',
+	version = '0.2.1',
 	description = 'A software build automation tool',
 	long_description = 'A software build automation tool',
 	author = 'Philipp Saveliev',
