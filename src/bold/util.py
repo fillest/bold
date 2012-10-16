@@ -5,6 +5,7 @@ import fnmatch
 import glob
 import imp
 import hashlib
+import platform
 
 
 USER_MODULE_NAME = 'build'
@@ -56,3 +57,9 @@ def load_user_module ():
 			file.close()
 
 	return module
+
+def is_on_windows ():
+	return platform.system().lower() == 'windows'
+
+def is_on_linux ():
+	return platform.system().lower() == 'linux'
