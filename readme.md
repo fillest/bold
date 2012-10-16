@@ -3,6 +3,7 @@
 ## Features
 * Build scripts are simple declarative Python code
 * Built-in builders for C
+* Works on Linux and Windows
 * Easy to write custom builders
 * No external dependencies (just argparse for Python 2.6), small hackable codebase
 * Builder-level script code change detection
