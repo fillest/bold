@@ -5,7 +5,7 @@ requirements = [
 ]
 
 #py2.6 has no argparse
-try: 
+try:
 	import argparse
 except ImportError:
 	requirements.append('argparse')
@@ -13,7 +13,7 @@ except ImportError:
 
 setuptools.setup(
 	name = 'bold',
-	version = '0.2.1',
+	version = '0.2.2',
 	description = 'A software build automation tool',
 	long_description = 'A software build automation tool',
 	author = 'Philipp Saveliev',
