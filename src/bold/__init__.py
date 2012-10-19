@@ -75,10 +75,23 @@ def run ():
 		for builder_class in builders._registered_builders:
 			b = builder_class(db, args.build_path, args.print_ood)
 
-			assert isinstance(b.sources, (basestring, list, tuple)) or callable(b.sources) #TODO friendly error
-			actual_src_paths = b.sources() if callable(b.sources) else (
-				util.lazy_glob(b.sources)(None) if isinstance(b.sources, basestring) else b.sources
-			)
+
+			#TODO friendly error
+			assert isinstance(b.sources, (basestring, list, tuple)) or callable(b.sources) 
+
+			if callable(b.sources):
+				actual_src_paths = b.sources()
+				assert actual_src_paths
+			elif isinstance(b.sources, basestring):
+				actual_src_paths = util.lazy_glob(b.sources)(None)
+				assert actual_src_paths
+			else:
+				actual_src_paths = b.sources
+				for p in b.sources:
+					if not os.path.isfile(p):
+						raise ValueError("File not found: " + p)
+
+
 			# saved_src_paths = []
 			# new_paths = set(actual_src_paths) - set(saved_src_paths)
 			# deleted_paths = set(saved_src_paths) - set(actual_src_paths)
