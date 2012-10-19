@@ -98,7 +98,7 @@ class Builder (object):
 	def shell_run (self, cmd, return_status = False):
 		cmd = self.resolve(cmd)
 		logger.info(cmd)
-		(subprocess.call if return_status else subprocess.check_call)(cmd, shell = True)
+		return (subprocess.call if return_status else subprocess.check_call)(cmd, shell = True)
 
 	def resolve (self, path):
 		return (path._path if isinstance(path, bold.Lazy_build_path) else path).format(build_path = self.build_path)
