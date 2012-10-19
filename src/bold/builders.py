@@ -25,6 +25,7 @@ class Builder (object):
 	abstract = True
 
 	required_by = None
+	sources = None #TODO declaration-level check
 
 	def __init__ (self, db, build_path):
 		self._db = db
@@ -107,7 +108,7 @@ class Builder (object):
 		self._set_dep(self.target, actual_src_paths)
 		if self.required_by:
 			self._set_dep(self.required_by.__func__() if callable(self.required_by) else self.required_by,
-				[self.target] + actual_src_paths,
+				[self.target] + list(actual_src_paths),
 				is_external = True)
 
 DEP_RE = re.compile(r': | \\\s+|\s+')
@@ -141,8 +142,7 @@ def _src_to_o (src_path, build_path):
 
 class CProgram (Builder):
 	abstract = True
-
-	sources = None #TODO declaration-level check
+	
 	includes = []
 	compile_flags = ''
 	link_flags = ''
