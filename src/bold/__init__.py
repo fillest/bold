@@ -22,6 +22,7 @@ def _parse_args ():
 	p.add_argument('--state-file', default = '.bold_state', help = "Bold internal state DB file name")
 	p.add_argument('--build-path', default = 'build/dev/', help = "Target build directory path") #TODO build/dev->build
 	p.add_argument('--reset', '-r', action = 'store_true', help = "Delete Bold state file")
+	p.add_argument('--print-ood', action = 'store_true', help = "Print out-of-date files")
 	return p.parse_args()
 
 def _init_logging ():
@@ -72,7 +73,7 @@ def run ():
 		# process deps
 		bs = []
 		for builder_class in builders._registered_builders:
-			b = builder_class(db, args.build_path)
+			b = builder_class(db, args.build_path, args.print_ood)
 
 			assert isinstance(b.sources, (basestring, list, tuple)) or callable(b.sources) #TODO friendly error
 			actual_src_paths = b.sources() if callable(b.sources) else (

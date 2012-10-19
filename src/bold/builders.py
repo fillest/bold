@@ -27,9 +27,10 @@ class Builder (object):
 	required_by = None
 	sources = None #TODO declaration-level check
 
-	def __init__ (self, db, build_path):
+	def __init__ (self, db, build_path, print_ood):
 		self._db = db
 		self.build_path = build_path  #TODO optional for class-lavel assigning?
+		self._print_ood = print_ood
 
 		self._tmp_files = set()
 		self._tmp_deps = collections.defaultdict(set)
@@ -38,7 +39,8 @@ class Builder (object):
 		changed_targets = set()
 
 		def on_changed (path, changed_targets=changed_targets):
-			# print path
+			if self._print_ood:
+				logger.info("out-of-date: " + path)
 			# print self._tmp_deps[path]
 			changed_targets |= self._tmp_deps[path]
 
