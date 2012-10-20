@@ -6,9 +6,15 @@ import glob
 import imp
 import hashlib
 import platform
+import subprocess
+import logging
+import sys
 
 
 USER_MODULE_NAME = 'build'
+
+
+log = logging.getLogger(__name__)
 
 
 @contextlib.contextmanager
@@ -63,3 +69,14 @@ def is_on_windows ():
 
 def is_on_linux ():
 	return platform.system().lower() == 'linux'
+
+def preprocess_header (includes, extra_cc_params = ''):
+	#TODO make "cc" customizable
+	cmd = 'cc -E -dD %s -' % extra_cc_params
+	log.info(cmd + "\nInput: " + includes)
+	process = subprocess.Popen(cmd, shell = True, stdin = subprocess.PIPE, stdout = subprocess.PIPE, bufsize = -1)
+	output = process.communicate(includes)[0]
+	if process.returncode:
+		log.error("Process returned %s" % process.returncode)
+		sys.exit(1)
+	return output
