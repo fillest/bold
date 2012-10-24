@@ -195,8 +195,11 @@ class CProgram (Builder):
 			o_path = _src_to_o(src_path, self.build_path)
 			o_paths.append(o_path)
 			if o_path in changed_targets:
-				_compile(self.compiler, src_path, o_path, self.compile_flags,
-					[self.resolve(p() if callable(p) else p) for p in self.includes]) and sys.exit(1)
+				if _compile(self.compiler, src_path, o_path, self.compile_flags,
+						[self.resolve(p() if callable(p) else p) for p in self.includes]):
+					if os.path.isfile(o_path):
+						os.remove(o_path)
+					sys.exit(1)
 				self._update_target(o_path)
 
 		exe_path = self.resolve(self.target)
