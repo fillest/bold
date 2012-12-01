@@ -23,7 +23,7 @@ def _parse_args ():
 	p.add_argument('--build-path', default = 'build/dev/', help = "Target build directory path") #TODO build/dev->build
 	p.add_argument('--reset', '-r', action = 'store_true', help = "Delete Bold state file")
 	p.add_argument('--print-ood', action = 'store_true', help = "Print out-of-date files")
-	return p.parse_args()
+	return p.parse_known_args()[0]
 
 def _init_logging ():
 	# format = '%(asctime)s %(levelname)-5s [%(filename)s:%(funcName)s:%(lineno)d]  %(message)s'
