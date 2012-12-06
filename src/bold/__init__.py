@@ -75,9 +75,8 @@ def run ():
 		for builder_class in builders._registered_builders:
 			b = builder_class(db, args.build_path, args.print_ood)
 
-
-			#TODO friendly error
-			assert isinstance(b.sources, (basestring, list, tuple)) or callable(b.sources) 
+			if not (isinstance(b.sources, (basestring, list, tuple)) or callable(b.sources)):
+				raise TypeError("builder %s has invalid .sources: %s" % (b, b.sources))
 
 			if callable(b.sources):
 				actual_src_paths = b.sources()
