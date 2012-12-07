@@ -84,12 +84,13 @@ def run ():
 			elif isinstance(b.sources, basestring):
 				actual_src_paths = util.lazy_glob(b.sources)(None)
 				assert actual_src_paths
-			else:
-				actual_src_paths = b.sources
-				for p in b.sources:
-					if not os.path.isfile(p):
-						raise ValueError("File not found: " + p)
-
+			elif isinstance(b.sources, (list, tuple)):
+				actual_src_paths = []
+				for mask in b.sources:
+					paths = util.lazy_glob(mask)(None)
+					if not paths:
+						raise ValueError("File mask produced empty result: %s" % mask)
+					actual_src_paths += paths
 
 			# saved_src_paths = []
 			# new_paths = set(actual_src_paths) - set(saved_src_paths)
