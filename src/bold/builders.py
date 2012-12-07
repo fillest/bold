@@ -152,13 +152,15 @@ class CProgram (Builder):
 	lib_paths = []
 	compiler = 'cc'
 	target = 'run'
+	deps_include_missing_header = False
 
 	def _get_deps (self, source_file_path):
 		#note: don't forget to use quotes for headers when needed (http://gcc.gnu.org/bugzilla/show_bug.cgi?id=42921)
 		dep_file_path = 'dep.d'
 		cmd = ' '.join([
-			self.compiler, '-MM -MF',
-			dep_file_path,
+			self.compiler, '-MM',
+			'-MG' if self.deps_include_missing_header else '',
+			'-MF', dep_file_path,
 			' '.join('-I%s' % p for p in [self.resolve(p() if callable(p) else p) for p in self.includes]),
 			self.compile_flags,  #TODO need?
 			source_file_path,
