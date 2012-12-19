@@ -156,7 +156,7 @@ class CProgram (Builder):
 
 	def _get_deps (self, source_file_path):
 		#note: don't forget to use quotes for headers when needed (http://gcc.gnu.org/bugzilla/show_bug.cgi?id=42921)
-		dep_file_path = 'dep.d'
+		dep_file_path = self.resolve(self.build_path + 'dep.d')
 		cmd = ' '.join([
 			self.compiler, '-MM',
 			'-MG' if self.deps_include_missing_header else '',
@@ -167,12 +167,8 @@ class CProgram (Builder):
 		])
 		# logger.debug(cmd)
 		subprocess.check_call(cmd, shell = True)
-		try:
-			with open(dep_file_path) as f:
-				c = f.read().strip()
-				# print c
-		finally:
-			os.remove(dep_file_path)
+		with open(dep_file_path) as f:
+			c = f.read().strip()
 
 		parts = DEP_RE.split(c)
 		_o_file_name = parts[0]
