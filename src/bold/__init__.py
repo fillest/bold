@@ -11,6 +11,9 @@ import hashlib
 import errno
 
 
+build_path = util.Lazy_build_path('{build_path}')
+
+
 SHELVE_PICKLE_PROTOCOL = 2
 
 
@@ -134,19 +137,3 @@ def run ():
 					changed_classes[b.__class__]()
 	finally:
 		db.close()
-
-
-class Lazy_build_path (object):
-	def __init__ (self, path):
-		self._path = path
-
-	def __add__(self, path):
-		return self.__class__(self._path + path)
-
-	def __radd__ (self, path):
-		return self.__class__(path + self._path)
-
-	def __str__ (self):
-		return self._path
-
-build_path = Lazy_build_path('{build_path}')

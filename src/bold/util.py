@@ -80,3 +80,16 @@ def preprocess_header (includes, extra_cc_params = ''):
 		log.error("Process returned %s" % process.returncode)
 		sys.exit(1)
 	return output
+
+class Lazy_build_path (object):
+	def __init__ (self, path):
+		self._path = path
+
+	def __add__(self, path):
+		return self.__class__(self._path + path)
+
+	def __radd__ (self, path):
+		return self.__class__(path + self._path)
+
+	def __str__ (self):
+		return self._path

@@ -3,7 +3,6 @@ import os
 import re
 import logging
 from bold import util
-import bold
 import sys
 import errno
 import collections
@@ -104,7 +103,7 @@ class Builder (object):
 		return (subprocess.call if return_status else subprocess.check_call)(cmd, shell = True)
 
 	def resolve (self, path):
-		return (path._path if isinstance(path, bold.Lazy_build_path) else path).format(build_path = self.build_path)
+		return (path._path if isinstance(path, util.Lazy_build_path) else path).format(build_path = self.build_path)
 
 	def handle_dependencies (self, actual_src_paths):
 		self._set_dep(self.target, actual_src_paths)
