@@ -59,19 +59,19 @@ def run ():
 			#TODO ignore comments (use compile.parse?)
 			cur_ccode_hash = hashlib.md5(''.join(filter(None, map(string.strip, cur_class_code.splitlines())))).digest()
 			cl_hash_key = 'class_code_hash:' + repr(builder_class)
-			if cur_ccode_hash != db.get(cl_hash_key):
+			if cur_ccode_hash != db.get(args.build_path + cl_hash_key):
 				def save_hash (cl_hash_key=cl_hash_key, cur_ccode_hash=cur_ccode_hash):
-					db[cl_hash_key] = cur_ccode_hash
+					db[args.build_path + cl_hash_key] = cur_ccode_hash
 				changed_classes[builder_class] = save_hash
 
 			module_code = module_code.replace(cur_class_code, '')
 
 		# detect other module changes
 		cur_mlcode_hash = hashlib.md5(''.join(filter(None, map(string.strip, module_code.splitlines())))).digest()
-		if cur_mlcode_hash != db.get('module_level_code_hash'):
+		if cur_mlcode_hash != db.get(args.build_path + 'module_level_code_hash'):
 			log.warning("Cannot analyze some of your build script changes,"
 				" *maybe* you need to force rebuild something manually (or just everything with --reset if you are unsure)")
-			db['module_level_code_hash'] = cur_mlcode_hash
+			db[args.build_path + 'module_level_code_hash'] = cur_mlcode_hash
 
 		# process deps
 		bs = []

@@ -43,9 +43,9 @@ class Builder (object):
 			# print self._tmp_deps[path]
 			changed_targets |= self._tmp_deps[path]
 
-		old_files = self._db.get(self.__class__.__name__ + 'files', {})
+		old_files = self._db.get(self.build_path + self.__class__.__name__ + 'files', {})
 		# print old_files
-		old_deps = self._db.get(self.__class__.__name__ + 'deps', {})
+		old_deps = self._db.get(self.build_path + self.__class__.__name__ + 'deps', {})
 
 		cur_files = {}
 		# print self._tmp_deps
@@ -66,8 +66,8 @@ class Builder (object):
 					on_changed(path)
 
 		if changed_targets:
-			self._db[self.__class__.__name__ + 'files'] = cur_files #TODO no need for ns here?
-			self._db[self.__class__.__name__ + 'deps'] = self._tmp_deps
+			self._db[self.build_path + self.__class__.__name__ + 'files'] = cur_files #TODO no need for ns here?
+			self._db[self.build_path + self.__class__.__name__ + 'deps'] = self._tmp_deps
 
 		return changed_targets
 
@@ -89,9 +89,9 @@ class Builder (object):
 	def _update_target (self, path):
 		path = self.resolve(path)
 
-		fs = self._db[self.__class__.__name__ + 'files']
+		fs = self._db[self.build_path + self.__class__.__name__ + 'files']
 		fs[path]= {'size': os.stat(path).st_size, 'hash': util.file_hash(path)}
-		self._db[self.__class__.__name__ + 'files'] = fs
+		self._db[self.build_path + self.__class__.__name__ + 'files'] = fs
 		return self
 
 	def build (self, changed_targets, src_paths):
