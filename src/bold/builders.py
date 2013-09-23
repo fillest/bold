@@ -99,7 +99,7 @@ class Builder (object):
 
 	def shell_run (self, cmd, return_status = False):
 		cmd = self.resolve(cmd)
-		logger.info(cmd)
+		logger.info("$ %s" % cmd)
 		return (subprocess.call if return_status else subprocess.check_call)(cmd, shell = True)
 
 	def resolve (self, path):
