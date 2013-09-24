@@ -100,7 +100,13 @@ class Builder (object):
 	def shell_run (self, cmd, return_status = False):
 		cmd = self.resolve(cmd)
 		logger.info("$ %s" % cmd)
-		return (subprocess.call if return_status else subprocess.check_call)(cmd, shell = True)
+		status = subprocess.call(cmd, shell = True)
+		if return_status:
+			return status
+		else:
+			if status != 0:
+				logger.error("Last command returned non-zero exit status %s, it's error report should be above" % status)
+				sys.exit(1)
 
 	def resolve (self, path):
 		return (path._path if isinstance(path, util.Lazy_build_path) else path).format(build_path = self.build_path)
