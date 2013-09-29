@@ -171,7 +171,12 @@ class CProgram (Builder):
 			source_file_path,
 		])
 		# logger.debug(cmd)
-		subprocess.check_call(cmd, shell = True)
+		status = subprocess.call(cmd, shell = True)
+		if status != 0:
+			logger.error("Last command returned non-zero exit status %s, it's error report should be above" % status)
+			logger.error("Last command was: %s" % cmd)
+			sys.exit(1)
+
 		with open(dep_file_path) as f:
 			c = f.read().strip()
 
