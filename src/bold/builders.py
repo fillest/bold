@@ -34,14 +34,15 @@ class Builder (object):
 		self._tmp_files = set()
 		self._tmp_deps = collections.defaultdict(set)
 
+	def on_changed (self, path, changed_targets, print_ood):
+		if print_ood:
+			logger.info("out-of-date: " + path)
+		# print self._tmp_deps[path]
+
+		changed_targets.update(self._tmp_deps[path])
+
 	def _process_deps (self, force_rebuild = False):
 		changed_targets = set()
-
-		def on_changed (path, changed_targets=changed_targets):
-			if self._print_ood:
-				logger.info("out-of-date: " + path)
-			# print self._tmp_deps[path]
-			changed_targets |= self._tmp_deps[path]
 
 		old_files = self._db.get(self.build_path + self.__class__.__name__ + 'files', {})
 		# print old_files
@@ -50,20 +51,20 @@ class Builder (object):
 		cur_files = {}
 		# print self._tmp_deps
 		for path in self._tmp_files:
-			# print path
+			# print self, path
 			try:
 				cur_size = os.stat(path).st_size
 				cur_hash = util.file_hash(path)
 				cur_files[path] = {'size': cur_size, 'hash': cur_hash}
 			except OSError as e:
 				if e.errno == errno.ENOENT:
-					on_changed(path)
+					self.on_changed(path, changed_targets, self._print_ood)
 				else:
 					raise
 			else:
 				old_file = old_files.get(path)
 				if force_rebuild or (not old_file) or (old_file['size'] != cur_size) or (old_file['hash'] != cur_hash):
-					on_changed(path)
+					self.on_changed(path, changed_targets, self._print_ood)
 
 		if changed_targets:
 			self._db[self.build_path + self.__class__.__name__ + 'files'] = cur_files #TODO no need for ns here?
