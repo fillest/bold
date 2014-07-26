@@ -32,7 +32,6 @@ setuptools.setup(
 		'Intended Audience :: Developers',
 		'Topic :: Software Development :: Build Tools',
 		'Topic :: Utilities',
-		'Environment :: Console',
 	],
 	entry_points = """
 		[console_scripts]
