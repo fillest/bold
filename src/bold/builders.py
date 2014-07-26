@@ -145,8 +145,9 @@ def _link (compiler, exe_path, o_file_paths, lib_paths, libs, link_flags):
 	return subprocess.call(cmd, shell = True)
 
 def _src_to_o (src_path, build_path):
-	src_fname, _ext = os.path.splitext(os.path.basename(src_path))
-	return build_path + src_fname + '.o'
+	fdir, fname = os.path.split(src_path)
+	src_fname, _ext = os.path.splitext(fname)
+	return build_path + (fdir + '/' + src_fname + '.o').replace('/', '_')
 
 class CProgram (Builder):
 	abstract = True
